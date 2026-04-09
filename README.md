@@ -98,3 +98,87 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+## Данные
+
+#### Интерфейс товара:
+```
+interface IProduct {
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
+} 
+```
+Данный интерфейс дает нам информацию о товаре: айди, описание, картинка, название, группа, цена с их типами
+
+#### Интерфейс покупателя:
+```
+interface IBuyer {
+  payment: 'card' | 'cash' | '';
+  email: string;
+  phone: string;
+  address: string;
+} 
+```
+Данный интерфейс дает нам информацию о покупателе: тип платежа(наличные и безналичные), адрес электронной почты,
+номер телефона, адрес доставки
+
+## Модели данных
+
+#### Класс ProductCatalog  
+Хранит товары, которые можно купить в приложении
+
+Конструктор:  
+`constructor(allProducts: Product[], selectedProduct: Product | null)` - В конструктор передается список товаров и выбранный товар.  
+
+Поля класса:  
+`private allProducts: Product[]` - список всех товаром.  
+`private selectedProduct: Product | null` - выбранный товар.  
+
+Методы:  
+`saveProducts(allProducts: Product[]): void` - сохранение массива товаров полученного в параметрах метода.  
+`get productsFromModel(): Product[]` - получение массива товаров из модели.  
+`getProductById(productId: number): Product` - получение одного товара по его id.  
+`currentProduct(selectedProduct: Product | null): void` - сохранение товара для подробного отображения.  
+`get currentProduct(): Product` - получение товара для подробного отображения.  
+
+#### Класс ShoppingCart
+Хранит товары, которые пользователь выбрал для покупки
+
+Конструктор:  
+`constructor(cartProducts: Product[] | null)` - В конструктор передается список товаров добавленных в корзину
+
+Поля класса:  
+`private cartProducts: Product[] = []` - хранит массив товаров, выбранных покупателем для покупки.  
+
+Методы:  
+`get CartProducts(): Products[]` - получение массива товаров, которые находятся в корзине.  
+`addToCart(product: Product): void` - добавление товара, который был получен в параметре, в массив корзины.  
+`delFromCart(product: Product): void` - удаление товара, полученного в параметре из массива корзины.  
+`clearCart(): void` - очистка корзины.  
+`get calculateTotalPrice(): number` - получение стоимости всех товаров в корзине.  
+`get ItemCount(): number` - получение количества товаров в корзине.  
+`hasProduct(productId: number): boolean` - проверка наличия товара в корзине по его id, полученного в параметр метода.  
+
+#### Класс Buyer
+Содержит данные покупателя, которые тот должен указать при оформлении заказа.  
+
+Конструктор:  
+`constructor(data: Partial<IBuyer> = {})` - Конструктор хранит вид оплаты, адрес доставки, телефонный номер и электронную почту покупателя переданные объектом.  
+
+Поля класса:  
+`private payment: 'card' | 'cash' | ''` - вид оплаты.  
+`private address: string` - адрес доставки.  
+`private phone: string` - телефонный номер.  
+`private email: string` -  электронная почта.  
+
+Методы:  
+`setPaymentType(payment: 'card' | 'cash' | ''): void` - сохранить метод оплаты.  
+`setAddress(address: string): void` - сохранить адрес покупателя.
+`setPhoneNumber(phone: string): void` - сохранить телефонный номер покупателя.  
+`setEmail(email: string): void` - сохранить электронную почту покупателя.  
+`get buyerData(): IBuyer` - получение всех данных покупателя.  
+`clearBuyerData(): void` - очистка данных покупателя.  
+`validate(): void` - валидация данных.  
