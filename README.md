@@ -131,36 +131,36 @@ interface IBuyer {
 Хранит товары, которые можно купить в приложении
 
 Конструктор:  
-`constructor(allProducts: Product[], selectedProduct: Product | null)` - В конструктор передается список товаров и выбранный товар.  
+`constructor(allProducts: IProduct[], selectedProduct: IProduct | null)` - В конструктор передается список товаров и выбранный товар.  
 
 Поля класса:  
-`private allProducts: Product[]` - список всех товаром.  
-`private selectedProduct: Product | null` - выбранный товар.  
+`private allProducts: IProduct[]` - список всех товаром.  
+`private selectedProduct?: IProduct` - выбранный товар.  
 
 Методы:  
-`saveProducts(allProducts: Product[]): void` - сохранение массива товаров полученного в параметрах метода.  
-`get productsFromModel(): Product[]` - получение массива товаров из модели.  
-`getProductById(productId: number): Product` - получение одного товара по его id.  
-`currentProduct(selectedProduct: Product | null): void` - сохранение товара для подробного отображения.  
-`get currentProduct(): Product` - получение товара для подробного отображения.  
+`saveProducts(allProducts: IProduct[]): void` - сохранение массива товаров полученного в параметрах метода.  
+`get productsFromModel(): IProduct[]` - получение массива товаров из модели.  
+`getProductById(productId: string): IProduct` - получение одного товара по его id.  
+`currentProduct(selectedProduct: IProduct | null): void` - сохранение выбранного товара для подробного отображения.  
+`get returnCurrentProduct(): IProduct` - получение выбранного товара для подробного отображения.  
 
 #### Класс ShoppingCart
 Хранит товары, которые пользователь выбрал для покупки
 
 Конструктор:  
-`constructor(cartProducts: Product[] | null)` - В конструктор передается список товаров добавленных в корзину
+`constructor(cartProducts: IProduct[] | null)` - В конструктор передается список товаров добавленных в корзину
 
 Поля класса:  
-`private cartProducts: Product[] = []` - хранит массив товаров, выбранных покупателем для покупки.  
+`private cartProducts: IProduct[] = []` - хранит массив товаров, выбранных покупателем для покупки.  
 
 Методы:  
-`get CartProducts(): Products[]` - получение массива товаров, которые находятся в корзине.  
-`addToCart(product: Product): void` - добавление товара, который был получен в параметре, в массив корзины.  
-`delFromCart(product: Product): void` - удаление товара, полученного в параметре из массива корзины.  
+`get cartProductsFromModel(): IProduct[]` - получение массива товаров, которые находятся в корзине.  
+`addToCart(product: IProduct): void` - добавление товара, который был получен в параметре, в массив корзины.  
+`delFromCart(product: IProduct): void` - удаление товара, полученного в параметре из массива корзины.  
 `clearCart(): void` - очистка корзины.  
 `get calculateTotalPrice(): number` - получение стоимости всех товаров в корзине.  
-`get ItemCount(): number` - получение количества товаров в корзине.  
-`hasProduct(productId: number): boolean` - проверка наличия товара в корзине по его id, полученного в параметр метода.  
+`get itemCount(): number` - получение количества товаров в корзине.  
+`hasProduct(productId: string): boolean` - проверка наличия товара в корзине по его id, полученного в параметр метода.  
 
 #### Класс Buyer
 Содержит данные покупателя, которые тот должен указать при оформлении заказа.  
