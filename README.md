@@ -182,3 +182,16 @@ interface IBuyer {
 `get buyerData(): IBuyer` - получение всех данных покупателя.  
 `clearBuyerData(): void` - очистка данных покупателя.  
 `validate(): void` - валидация данных.  
+
+
+## Слой коммуникации  
+
+#### Класс ProductFetcher  
+Класс для получения и выдачи списка товаров с сервера и на него через GET-запрос. Использует композицию с классом Api для выполнения HTTP-запросов.  
+
+Конструктор:  
+`constructor(api: IApi)` - Объект для выполнения запросов  
+
+Методы:  
+`getProducts(): Promise<IGetProductsResponse>` - выполняет GET-запрос на эндпоинт `/product/` и возвращает массив товаров.  
+`postOrder(order: IOrder): Promise<IOrderResponse>` - выполняет POST-запрос на эндпоинт `/order/` и принимает данные заказа.  
