@@ -20,7 +20,7 @@ async function init() {
         
         const shoppingCart = new ShoppingCart(products.items);
         console.log(shoppingCart.cartProductsFromModel);
-        
+
         const buyer = new Buyer({
             payment: "card",
             address: "dudarova street",
