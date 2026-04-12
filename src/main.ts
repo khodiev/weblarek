@@ -16,12 +16,33 @@ async function init() {
         
         const products = await productFetcher.getProducts();
         
+        console.log("------PRODUCT CATALOG TESTS------");
+
         const productCatalog = new ProductCatalog();
         productCatalog.saveProducts(products.items);
-        console.log(productCatalog.productsFromModel);
+        console.log("Вывод всех товаров", productCatalog.productsFromModel);
+        console.log("Вторая карточка по айди", productCatalog.getProductById(products.items[2].id));
+
+        productCatalog.currentProduct(products.items[1]);
+        console.log("Выбранный товар", productCatalog.returnCurrentProduct);
+
+        console.log("------SHOPPING CART TESTS------");
         
         const shoppingCart = new ShoppingCart();
-        console.log(shoppingCart.cartProductsFromModel);
+        console.log("Все товары в корзине", shoppingCart.cartProductsFromModel);
+        shoppingCart.addToCart(products.items[1]);
+        shoppingCart.addToCart(products.items[2]);
+        shoppingCart.addToCart(products.items[3]);
+        console.log("Все товари в корзине после пополнения", shoppingCart.cartProductsFromModel);
+
+        console.log("Общая цена товаров в корзине", shoppingCart.calculateTotalPrice);
+        console.log("Общее кол-во предметов в корзине", shoppingCart.itemCount);
+        shoppingCart.delFromCart(products.items[2]);
+        console.log("Все товары в корзине после удаления одного", shoppingCart.cartProductsFromModel)
+        shoppingCart.clearCart();
+        console.log("Все товары в корзине после ее очистки", shoppingCart.cartProductsFromModel);
+
+        console.log("------BUYER TESTS------");
 
         const buyer = new Buyer({
             payment: "card",
@@ -30,7 +51,15 @@ async function init() {
             email: "khodiev.tamerlan@yandex.ru"
         });
         
-        console.log(buyer.buyerData);
+        console.log("Данные о покупателе", buyer.buyerData);
+        console.log("Валидация данных", buyer.validate());
+        buyer.clearBuyerData();
+        console.log("Вывод данных о покупателе после их очистки", buyer.buyerData);
+
+        buyer.setAddress("genetal Pliev");
+        buyer.setPaymentType("cash");
+        console.log("Вывод данных о покупателе после получения двух параметров", buyer.buyerData);
+        console.log("Валидация, где не полностью заполненны данные", buyer.validate())
         
     } catch (error) {
         console.error('Ошибка инициализации приложения:', error);

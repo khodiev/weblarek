@@ -52,21 +52,25 @@ export class Buyer {
         this.email = '';
     }
 
-    validate(): void {
+    validate(): Partial<Record<keyof IBuyer, string>> {
+        const returnErrors: Partial<Record<keyof IBuyer, string>> = {};
+        
         if (!this.payment) {
-            throw new Error(errors.paymentError)
+            returnErrors.payment = errors.paymentError;
         }
-
+        
         if (!this.address) {
-            throw new Error(errors.addressError)
+            returnErrors.address = errors.addressError;
         }
-
+        
         if (!this.phone) {
-            throw new Error(errors.phoneError)
+            returnErrors.phone = errors.phoneError;
         }
-
+        
         if (!this.email) {
-            throw new Error(errors.emailError)
+            returnErrors.email = errors.emailError;
         }
+        
+        return returnErrors;
     }
 }
