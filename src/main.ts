@@ -4,21 +4,23 @@ import { ShoppingCart } from './components/Models/ShoppingCart';
 import { Buyer } from './components/Models/Buyer';
 
 /* import { apiProducts } from './utils/data'; */
-import { ProductFetcher } from './components/base/ProductFetcher';
+import { ProductFetcher } from './components/Communication/ProductFetcher';
 import { Api } from './components/base/Api';
+import { API_URL } from './utils/constants';
 
 async function init() {
     try {
-        const api = new Api("https://larek-api.nomoreparties.co");
+        const api = new Api(API_URL);
         
         const productFetcher = new ProductFetcher(api);
         
         const products = await productFetcher.getProducts();
         
-        const productCatalog = new ProductCatalog(products.items);
+        const productCatalog = new ProductCatalog();
+        productCatalog.saveProducts(products.items);
         console.log(productCatalog.productsFromModel);
         
-        const shoppingCart = new ShoppingCart(products.items);
+        const shoppingCart = new ShoppingCart();
         console.log(shoppingCart.cartProductsFromModel);
 
         const buyer = new Buyer({
