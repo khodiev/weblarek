@@ -1,10 +1,10 @@
 import { IProduct } from "../../types/index.ts"; 
 
 export class ShoppingCart {
-    private cartProducts: IProduct[] = [];
+    private cartProducts: IProduct[];
 
-    constructor(cartProducts: IProduct[] | null) {
-        this.cartProducts = cartProducts || [];
+    constructor(cartProducts: IProduct[] = []) {
+        this.cartProducts = cartProducts;
     }
 
     get cartProductsFromModel(): IProduct[] {
