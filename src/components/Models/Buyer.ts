@@ -1,4 +1,4 @@
-import { IBuyer } from "../../types/index.ts";
+import { IBuyer, TPAYMENT } from "../../types/index.ts";
 
 const errors = {
     paymentError: "Пожалуйста, выберите способ оплаты",
@@ -7,8 +7,10 @@ const errors = {
     emailError: "Пожалуйста, введите вашу электронную почту"
 }
 
+type ValidationError = Partial<Record<keyof IBuyer, string>>;
+
 export class Buyer {
-    private payment: 'card' | 'cash' | '';
+    private payment: TPAYMENT;
     private address: string;
     private phone: string;
     private email: string;
@@ -20,7 +22,7 @@ export class Buyer {
         this.email = data.email || '';
     }
 
-    setPaymentType(payment: 'card' | 'cash' | ''): void {
+    setPaymentType(payment: TPAYMENT): void {
         this.payment = payment;
     }
 
@@ -52,8 +54,8 @@ export class Buyer {
         this.email = '';
     }
 
-    validate(): Partial<Record<keyof IBuyer, string>> {
-        const returnErrors: Partial<Record<keyof IBuyer, string>> = {};
+    validate(): ValidationError {
+        const returnErrors: ValidationError = {};
         
         if (!this.payment) {
             returnErrors.payment = errors.paymentError;
