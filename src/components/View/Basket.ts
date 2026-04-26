@@ -28,6 +28,12 @@ export class Basket extends Component<BasketData> {
         this.basketContent.innerHTML = '';
 
         this.basketContent.replaceChildren(...items);
+
+        if (items.length === 0) {
+            this.basketButton.disabled = true;
+        } else {
+            this.basketButton.disabled = false;
+        }
     }
 
     set price(value: number) {

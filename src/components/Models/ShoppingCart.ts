@@ -4,8 +4,8 @@ import { IEvents } from "../base/Events.ts";
 export class ShoppingCart {
     private cartProducts: IProduct[];
 
-    constructor(cartProducts: IProduct[] = [], protected events: IEvents) {
-        this.cartProducts = cartProducts;
+    constructor(protected events: IEvents) {
+        this.cartProducts = [];
     }
 
     get cartProductsFromModel(): IProduct[] {

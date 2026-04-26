@@ -22,7 +22,7 @@ export class CardPrewiew extends Card<ICardPrewiew> {
         this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
         this.buttonElement.addEventListener('click', () => {
-            this.events.emit('card:open');
+            this.events.emit('preview:add');
         })
      }
 
@@ -43,5 +43,9 @@ export class CardPrewiew extends Card<ICardPrewiew> {
 
     set image(value: string) {
         this.setImage(this.imageElement, value)
+    }
+
+    set buttonText(value: string) {
+        this.buttonElement.textContent = value;
     }
 }
