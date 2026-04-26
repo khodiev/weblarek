@@ -1,4 +1,5 @@
-import { IBuyer, TPAYMENT } from "../../types/index.ts";
+import { IBuyer, TPayment } from "../../types/index.ts";
+import { IEvents } from "../base/Events.ts";
 
 const errors = {
     paymentError: "Пожалуйста, выберите способ оплаты",
@@ -10,32 +11,40 @@ const errors = {
 type ValidationError = Partial<Record<keyof IBuyer, string>>;
 
 export class Buyer {
-    private payment: TPAYMENT;
+    private payment: TPayment;
     private address: string;
     private phone: string;
     private email: string;
 
-    constructor(data: Partial<IBuyer> = {}) {
+    constructor(data: Partial<IBuyer> = {}, protected events: IEvents) {
         this.payment = data.payment || '';
         this.address = data.address || '';
         this.phone = data.phone || '';
         this.email = data.email || '';
     }
 
-    setPaymentType(payment: TPAYMENT): void {
+    setPaymentType(payment: TPayment): void {
         this.payment = payment;
+
+        this.events.emit('payment:change');
     }
 
     setAddress(address: string): void {
         this.address = address;
+
+        this.events.emit('address:change');
     }
 
     setPhoneNumber(phone: string): void {
         this.phone = phone;
+
+        this.events.emit('phone:change');
     }
 
     setEmail(email: string): void {
         this.email = email;
+
+        this.events.emit('email:change');
     }
 
     get buyerData(): IBuyer {
@@ -52,6 +61,8 @@ export class Buyer {
         this.address = '';
         this.phone = '';
         this.email = '';
+
+        this.events.emit('order:clear');
     }
 
     validate(): ValidationError {
