@@ -26,25 +26,25 @@ export class Buyer {
     setPaymentType(payment: TPayment): void {
         this.payment = payment;
 
-        this.events.emit('payment:change');
+        this.eventEmit();
     }
 
     setAddress(address: string): void {
         this.address = address;
 
-        this.events.emit('address:change');
+        this.eventEmit();
     }
 
     setPhoneNumber(phone: string): void {
         this.phone = phone;
 
-        this.events.emit('phone:change');
+        this.eventEmit();
     }
 
     setEmail(email: string): void {
         this.email = email;
 
-        this.events.emit('email:change');
+        this.eventEmit();
     }
 
     get buyerData(): IBuyer {
@@ -62,7 +62,7 @@ export class Buyer {
         this.phone = '';
         this.email = '';
 
-        this.events.emit('order:clear');
+        this.eventEmit();
     }
 
     validate(): ValidationError {
@@ -85,5 +85,9 @@ export class Buyer {
         }
         
         return returnErrors;
+    }
+
+    private eventEmit() {
+        this.events.emit('buyer:changed');
     }
 }

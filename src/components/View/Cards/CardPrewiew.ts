@@ -48,4 +48,8 @@ export class CardPrewiew extends Card<ICardPrewiew> {
     set buttonText(value: string) {
         this.buttonElement.textContent = value;
     }
+
+    set disabled(value: boolean) {
+        this.buttonElement.disabled = value;
+    }
 }

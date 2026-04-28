@@ -17,7 +17,7 @@ export class ShoppingCart {
             this.cartProducts.push(product);
         }
 
-        this.events.emit('basket:add');
+        this.eventEmit();
     }
 
     delFromCart(product: IProduct): void {
@@ -25,13 +25,13 @@ export class ShoppingCart {
             this.cartProducts = this.cartProducts.filter(p => p.id !== product.id);
         }
 
-        this.events.emit('basket:del');
+        this.eventEmit();
     }
 
     clearCart(): void {
         this.cartProducts = [];
 
-        this.events.emit('basket:clear');
+        this.eventEmit();
     }
 
     get calculateTotalPrice(): number {
@@ -46,5 +46,9 @@ export class ShoppingCart {
 
     hasProduct(productId: string): boolean {
         return this.cartProducts.some(product => product.id === productId);
+    }
+
+    private eventEmit() {
+        this.events.emit('basket:changed');
     }
 }
