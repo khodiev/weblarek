@@ -67,6 +67,7 @@ async function init() {
         const basket = new Basket(events, cloneTemplate(basketTemplateSelector));
         const orderForm = new OrderForm(events, cloneTemplate(orderTemplateSelector) as HTMLFormElement);
         const contactsForm = new ContactsForm(events, cloneTemplate(contactsTemplateSelector) as HTMLFormElement);
+        const orderSuccess = new OrderSucces(events, cloneTemplate(successTemplateSelector) as HTMLElement);
 
         events.on('catalog:products-loaded', () => {
             const itemCards = productCatalog.productsFromModel.map((item) => {
@@ -81,8 +82,6 @@ async function init() {
 
         events.on('card:select', (item: IProduct) => {
             productCatalog.currentProduct(item);
-
-            events.emit('catalog:product-selected');
         });
 
         events.on('catalog:product-selected', () => {
@@ -122,8 +121,6 @@ async function init() {
                     shoppingCart.addToCart(currentProduct);
                     previewCard.buttonText = 'Удалить из корзины';
                 }
-                
-                events.emit('basket:changed');
             }
         });
 
@@ -135,7 +132,6 @@ async function init() {
                 const cardBasket = new CardBasket(cloneTemplate(cardBasketTemplateSelector), {
                     onClick: () => {
                         shoppingCart.delFromCart(item);
-                        events.emit('basket:changed');
                     }
                 });
                 
@@ -151,7 +147,6 @@ async function init() {
         });
 
         events.on('basket:open', () => {
-            events.emit('basket:changed');
             modal.open(basket.render());
         });
 
@@ -175,7 +170,6 @@ async function init() {
         });
 
         events.on('order:create', () => {
-            events.emit('buyer:changed');
             modal.open(orderForm.render());
         });
 
@@ -188,15 +182,7 @@ async function init() {
         });
 
         events.on('form.order:submit', () => {
-            const errors = buyer.validate();
-            const orderErrors = [errors.address, errors.payment].filter(Boolean).join('; ');
-            
-            if (orderErrors.length === 0) {
-                modal.open(contactsForm.render());
-            } else {
-                orderForm.valid = false;
-                orderForm.errors = orderErrors;
-            }
+            modal.open(contactsForm.render());
         });
 
         events.on('contacts:email', (data: { email: string }) => {
@@ -208,39 +194,29 @@ async function init() {
         });
 
         events.on('form.contacts:submit', async () => {
-            const errors = buyer.validate();
-            const contactsErrors = [errors.phone, errors.email].filter(Boolean).join('; ');
-            
-            if (contactsErrors.length === 0) {
-                try {
-                    const orderData = {
-                        payment: buyer.buyerData.payment,
-                        address: buyer.buyerData.address,
-                        email: buyer.buyerData.email,
-                        phone: buyer.buyerData.phone,
-                        items: shoppingCart.cartProductsFromModel.map(item => item.id),
-                        total: shoppingCart.calculateTotalPrice
-                    };
+            try {
+                const orderData = {
+                    payment: buyer.buyerData.payment,
+                    address: buyer.buyerData.address,
+                    email: buyer.buyerData.email,
+                    phone: buyer.buyerData.phone,
+                    items: shoppingCart.cartProductsFromModel.map(item => item.id),
+                    total: shoppingCart.calculateTotalPrice
+                };
+                
+                const response = await productFetcher.postOrder(orderData);
+                
+                if (response.id) {
+                    orderSuccess.updateSpentAmount = response.total;
                     
-                    const response = await productFetcher.postOrder(orderData);
+                    shoppingCart.clearCart();
+                    buyer.clearBuyerData();
                     
-                    if (response.id) {
-                        const successContainer = cloneTemplate(successTemplateSelector);
-                        const orderSuccess = new OrderSucces(events, successContainer);
-                        orderSuccess.updateSpentAmount = response.total;
-                        
-                        shoppingCart.clearCart();
-                        buyer.clearBuyerData();
-                        
-                        modal.open(orderSuccess.render());
-                    }
-                } catch (error) {
-                    contactsForm.valid = false;
-                    contactsForm.errors = 'Ошибка при оформлении заказа. Попробуйте еще раз.';
+                    modal.open(orderSuccess.render());
                 }
-            } else {
+            } catch (error) {
                 contactsForm.valid = false;
-                contactsForm.errors = contactsErrors;
+                contactsForm.errors = 'Ошибка при оформлении заказа. Попробуйте еще раз.';
             }
         });
         
